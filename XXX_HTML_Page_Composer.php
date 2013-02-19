@@ -5,12 +5,12 @@ class XXX_HTML_Page_Composer
 	// Meta
 
 		public $language = 'en';
-		public $dialect = 'us';
+		public $dialect = 'US';
 
-		public $title = 'Title';
+		public $title = '';
 
-		public $tags = 'Tags';
-		public $description = 'Description';
+		public $tags = '';
+		public $description = '';
 
 		public $cacheable = true;
 		public $indexable = true;
@@ -55,87 +55,6 @@ class XXX_HTML_Page_Composer
 		
 		public $stripConcatenatedSpaces = true;
 
-	public function __construct ()
-	{
-		$this->language = XXX_I18n_Translation::$selectedTranslation;
-		$this->dialect = XXX_I18n_Localization::$selectedLocalization;
-		
-		$title = XXX_I18n_Translation::get('page', 'title');
-		
-		if ($title != '')
-		{
-			$this->title = $title;
-		}
-		
-		
-		$tags = XXX_I18n_Translation::get('page', 'tags');
-		
-		if ($tags != '')
-		{
-			$this->tags = $tags;
-		}
-				
-		$description = XXX_I18n_Translation::get('page', 'description');
-		
-		if ($description != '')
-		{
-			$this->description = $description;
-		}
-				
-		$externalCSSFilePrefix = XXX_Paths::composePublicWebURI('httpServer_static_XXX', 'presentation/css', 0, false) . '/';
-		$externalImagePrefix = XXX_Paths::composePublicWebURI('httpServer_static_XXX', 'presentation/images', 0, false) . '/';
-		$externalJSFilePrefix = XXX_Paths::composePublicWebURI('httpServer_static_XXX', 'logic/clientSide/js', 0, false) . '/';
-		$externalJSConfigurationFilePrefix = XXX_Paths::composePublicWebURI('httpServer_static_XXX', 'configuration', 0, false) . '/';
-		
-		$externalJSTranslationsFilePrefix = XXX_Paths::composePublicWebURI('httpServer_static_XXX', 'i18n/translations', 0, false) . '/';
-		$externalJSLocalizationsFilePrefix = XXX_Paths::composePublicWebURI('httpServer_static_XXX', 'i18n/localizations', 0, false) . '/';
-
-		// Presentation
-
-			$this->setFavicon($externalImagePrefix . 'favicon.ico');
-			
-			if ($this->standardizePresentation)
-			{
-				$this->addExternalCSSFile($externalCSSFilePrefix . 'standardize.css', '<!-- Standardize presentation, overwrite default browser markup -->' . XXX_String::$lineSeparator);
-			}
-			$this->addExternalCSSFile($externalCSSFilePrefix . 'XXX.css');
-
-			if (XXX_HTTP_Browser::$browser == 'fireFox')
-			{
-				$this->addExternalCSSFile($externalCSSFilePrefix . 'XXX_fireFox.css', '<!-- Browser specific fixes -->');
-			}
-			else if (XXX_HTTP_Browser::$browser == 'internetExplorer')
-			{
-				$this->addExternalCSSFile($externalCSSFilePrefix . 'XXX_internetExplorer.css', '<!-- Browser specific fixes --><!--[if IE]>', '<![endif]-->');
-				$this->addExternalCSSFile($externalCSSFilePrefix . 'XXX_internetExplorer_6.css', '<!--[if lte IE 6]>', '<![endif]-->');
-				$this->addExternalCSSFile($externalCSSFilePrefix . 'XXX_internetExplorer_7.css', '<!--[if lte IE 7]>', '<![endif]-->');
-
-				$this->addExternalCSSFile($externalJSFilePrefix . 'XXX_DOM_Ready_internetExplorer.css', '<!-- Actually javaScript --><!--[if IE]>', '<![endif]-->');
-			}
-			else if (XXX_HTTP_Browser::$browser == 'safari')
-			{
-				$this->addExternalCSSFile($externalCSSFilePrefix . 'XXX_safari.css', '<!-- Browser specific fixes -->');
-			}
-			else if (XXX_HTTP_Browser::$browser == 'chrome')
-			{
-				$this->addExternalCSSFile($externalCSSFilePrefix . 'XXX_chrome.css', '<!-- Browser specific fixes -->');
-			}
-			else if (XXX_HTTP_Browser::$browser == 'opera')
-			{
-				$this->addExternalCSSFile($externalCSSFilePrefix . 'XXX_opera.css', '<!-- Browser specific fixes -->');
-			}
-
-		// JS
-			
-			$this->addExternalJSFile($externalJSConfigurationFilePrefix . 'configuration.js');
-			$this->addExternalJSFile($externalJSFilePrefix . 'XXX.general.js');
-			$this->addExternalJSFile($externalJSFilePrefix . 'XXX.browser.js');
-			
-			$this->addExternalJSFile($externalJSTranslationsFilePrefix . $this->language . '/translations.' . $this->language . '.js');
-						
-			$this->addExternalJSFile($externalJSLocalizationsFilePrefix . $this->dialect . '/localizations.' . $this->dialect . '.js');
-	}
-	
 	// Meta
 
 		public function setLanguage ($language = 'en')
@@ -210,9 +129,9 @@ class XXX_HTML_Page_Composer
 			$this->favicon = $favicon ? $favicon : false;
 		}
 
-		public function addExternalCSSFile ($publicWebURI = '', $prefix = '', $suffix = '')
+		public function addExternalCSSFile ($uri = '', $prefix = '', $suffix = '')
 		{
-			$this->externalCSSFiles[] = array('publicWebURI' => $publicWebURI, 'prefix' => $prefix, 'suffix' => $suffix);
+			$this->externalCSSFiles[] = array('uri' => $uri, 'prefix' => $prefix, 'suffix' => $suffix);
 		}
 
 		public function setInternalCSS ($internalCSS = '')
@@ -249,9 +168,9 @@ class XXX_HTML_Page_Composer
 
 	// JS
 
-		public function addExternalJSFile ($publicWebURI = '', $prefix = '', $suffix = '')
+		public function addExternalJSFile ($uri = '', $prefix = '', $suffix = '')
 		{
-			$this->externalJSFiles[] = array('publicWebURI' => $publicWebURI, 'prefix' => $prefix, 'suffix' => $suffix);
+			$this->externalJSFiles[] = array('uri' => $uri, 'prefix' => $prefix, 'suffix' => $suffix);
 		}
 
 		public function setInternalJS ($internalJS = '')
@@ -268,271 +187,202 @@ class XXX_HTML_Page_Composer
 		{
 			$this->internalJS = $internalJS . XXX_String::$lineSeparator . $this->internalJS;
 		}
-
+	
+	
+	
 	public function compose ()
 	{
-		$paths = array
-		(
-			'template' => 'XXX_presentation_html_templates',
-			'include' => 'core',
-			'cache' => 'cache_templates'
-		);
-
-		$template = new XXX_Template('index.html', 'index_html/generic', 0);
-		$template->setPaths($paths);
-		$template->setup(true);
-
-		if (!$template->areComposedBlocksCached())
-		{
-			// Meta
-
+		$result = '';
+		
+		// doctype: html5
+		$result .= '<!DOCTYPE html>';
+		
+		$result .= '<html>';
+			$result .= '<head>';
+				
+				// Meta 
+					/*
+			
+					http-equiv: is equivalent to an actual HTTP header
+					name: just regular meta data
+					
+					*/
+					// Content types
+					$result .= '<meta http-equiv="content-type" content="text/html; charset=utf-8">';
+					$result .= '<meta http-equiv="content-style-type" content="text/css; charset=utf-8">';
+					$result .= '<meta http-equiv="content-script-type" content="text/javascript; charset=utf-8">';
+					
+					// Character set
+					$result .= '<meta http-equiv="charset" content="utf-8">';
+					
+					// Content languages
+					$result .= '<meta http-equiv="content-language" content="' . $this->language . '-' . $this->dialect . '">';
+					$result .= '<meta name="language" content="' . $this->language . '">';
+					$result .= '<meta name="dialect" content="' . $this->dialect . '">';
+					
+					// Content description
+					if ($this->title != '')
+					{
+						$result .= '<title>' . $this->title . '</title>';
+					}
+					if ($this->keywords != '')
+					{
+						$result .= '<meta name="keywords" content="' . $this->keywords . '">';
+					}
+					if ($this->description != '')
+					{
+						$result .= '<meta name="description" content="' . $this->description . '">';
+					}
+					
 					// Cache
-						if ($cacheable)
+						// Date according to RFC 2068 - http://www.w3.org/Protocols/rfc2068/rfc2068
+						if ($this->cacheable)
 						{
 							// Far future (A year)
-							$expiresDate = XXX_Formatter::formatRFC2965(XXX_TimestampHelpers::getCurrentTimestamp() + 31536000);
-							$template->compose('root.meta.cacheable');
+							$expiresDate = XXX_I18n_Formatter::formatRFC2965(XXX_TimestampHelpers::getCurrentTimestamp() + 31536000);
 						}
 						else
 						{
 							// Far past (A year)
-							$expiresDate = XXX_Formatter::formatRFC2965(XXX_TimestampHelpers::getCurrentTimestamp() - 31536000);
-							$template->compose('root.meta.notCacheable');
-
-							XXX_HTTPServer_Client_Output::sendNotCacheableHeaders();
+							$expiresDate = XXX_I18n_Formatter::formatRFC2965(XXX_TimestampHelpers::getCurrentTimestamp() - 31536000);
 						}
-
-					// Index
-						$revisionDate = XXX_Formatter::formatRFC2965(XXX_TimestampHelpers::getCurrentTimestamp());
-
-						if ($indexable)
+						$result .= '<meta http-equiv="expires" content="' . $expiresDate . '">';
+						if ($this->cacheable)
 						{
-							$template->compose('root.meta.indexable');
+							$result .= '<meta http-equiv="cache-control" content="public">';
 						}
 						else
 						{
-							$template->compose('root.meta.notIndexable');
+							$result .= '<meta http-equiv="pragma" content="no-cache">';
+							$result .= '<meta http-equiv="cache-control" content="no-store, no-cache, must-revalidate, post-check=0, pre-check=0">';
+							
+							XXX_HTTPServer_Client_Output::sendNotCacheableHeaders();				
 						}
-
-					$metaVariables = array
-					(
-						'TITLE' => $this->title,
-						'LANGUAGE' => $this->language,
-						'DIALECT' => $this->dialect,
-						'TAGS' => $this->tags,
-						'DESCRIPTION' => $this->description,
-						'EXPIRES_DATE' => $expiresDate,
-						'REVISION_DATE' => $revisionDate
-					);
-
-					$template->setVariable('META', $metaVariables);
-
-					// Custom meta tags
-
-					foreach ($this->customMetaTags as $customMetaTag)
-					{
-							$template->setVariable('TYPE', $customMetaTag['type']);
-							$template->setVariable('KEY', $customMetaTag['key']);
-							$template->setVariable('VALUE', $customMetaTag['value']);
-							$template->setVariable('PREFIX', $customMetaTag['prefix']);
-							$template->setVariable('SUFFIX', $customMetaTag['suffix']);
-						$template->compose('root.meta.customMetaTag');
-					}
-
-					$template->setVariable('CUSTOM', $this->customMeta);
-
-				$template->compose('root.meta');
-
-			// Presentation
-
-				// Favicon
-
-					if ($this->favicon)
-					{
-							$template->setVariable('PATH', $this->favicon);
-						$template->compose('root.presentation.favicon');
-					}
-
-				// External css files
-
-					foreach ($this->externalCSSFiles as $externalCSSFile)
-					{
-							$template->setVariable('PATH', $externalCSSFile['publicWebURI']);
-							$template->setVariable('PREFIX', $externalCSSFile['prefix']);
-							$template->setVariable('SUFFIX', $externalCSSFile['suffix']);
-						$template->compose('root.presentation.externalCSSFile');
-					}
-
-				// Internal css
 					
-					$internalCSS = $this->internalCSS;
-					
-					if ($this->compressInternalCSS && !XXX_Debug::$debug)
-					{
-						$internalCSS = XXX_CSS_Compressor::compressString($internalCSS);
-					}
-					
-					$template->setVariable('INTERNAL_CSS', $internalCSS);
-
-				$template->compose('root.presentation');
-
-			// HTML
-
-				$template->setVariable('CUSTOM', $this->customHTML);
-
-				if (XXX_Debug::$debug)
-				{
-					$template->setVariable('serverSide_debugNotifications', XXX_Debug::outputNotifications('debugs'));
-					$template->setVariable('serverSide_errorNotifications', XXX_Debug::outputNotifications('errors'));
-
-					$serverInformation = '';
-
-					$serverInformation .= '<pre>';
-					$serverInformation .= '<br><strong>ip:</strong> ' . XXX_HTTPServer_Client::$ip . '<br>';
-					$serverInformation .= '<br><strong>userAgentString:</strong> ' . XXX_HTTP_Browser::$userAgentString . '<br>';
-					$serverInformation .= '<br><strong>http client input limits:</strong><br>';
-					$serverInformation .= print_r(XXX_PHP::getHTTPServer_Client_Input_Limits(), true);
-					$serverInformation .= '<br><strong>raw uri variables:</strong><br>';
-					$serverInformation .= print_r(XXX_HTTPServer_Client_Input::getRawURIVariables(), true);
-					$serverInformation .= '<br><strong>raw body variables:</strong><br>';
-					$serverInformation .= print_r(XXX_HTTPServer_Client_Input::getRawBodyVariables(), true);
-					$serverInformation .= '<br><strong>file uploads:</strong><br>';
-					$serverInformation .= print_r(XXX_HTTPServer_Client_Input::getFileUploads(), true);
-					$serverInformation .= '<br><strong>cookies:</strong><br>';
-					$serverInformation .= print_r(XXX_HTTP_Cookie::getVariables(), true);
-					$serverInformation .= '<br><strong>session (' . XXX_HTTP_Cookie_Session::$ID . '):</strong><br>';
-					$serverInformation .= print_r(XXX_HTTP_Cookie_Session::getVariables(), true);					
-					$serverInformation .= '<br><strong>Profiler:</strong><br>';
-					
-					$points = XXX_Profiler::getPoints();
-					
-					$serverInformation .= '<table>';
-					for ($i = 0, $iEnd = XXX_Array::getFirstLevelItemTotal($points); $i < $iEnd; ++$i)
-					{
-						$serverInformation .= '<tr><td>' . $points[$i]['points']['from'] . ' - ' . $points[$i]['points']['to'] . ' </td><td>' . $points[$i]['time']['difference'] . 'ms </td><td>' . $points[$i]['memory']['prefix'] . $points[$i]['memory']['difference'] . 'B</td></tr>';
-					}
-					$serverInformation .= '</table>';
-					
-					$serverInformation .= '</pre>';
-
-					$template->setVariable('serverInformation', $serverInformation);
-
-					$template->compose('root.html.debug');
-				}
-
-				// TODO
-				//$template->compose('root.html.accessibility');
-				
-				$browserRecommendation = XXX_HTTPServer_Client_Input::getURIVariable('browserRecommendation', 'string', '');
-				
-				// Avoid for crawlers
-				if (!XXX_HTTP_Browser::$crawler && $browserRecommendation)
-				{
-					$template->compose('root.html.browserRecommendations.browserDownloadLinks');
-					$template->setVariable('BROWSER_DOWNLOAD_LINKS', $template->getContent('root.html.browserRecommendations.browserDownloadLinks'));
-					$template->resetComposedBlock('root.html.browserRecommendations.browserDownloadLinks');
-
-					// Browser Recommendation
-					switch ($browserRecommendation)
-					{
-						case 'unicodeSupport':
-							$template->compose('root.html.browserRecommendations.unicodeSupport');
-							break;
-						case 'cookieSupport':
-							$template->compose('root.html.browserRecommendations.cookieSupport');
-							break;
-						case 'enhancedSupport':
-							$template->compose('root.html.browserRecommendations.enhancedSupport');
-							break;
-						case 'flashSupport':
-							$template->compose('root.html.browserRecommendations.flashSupport');
-							break;
-					}
-
-					$template->compose('root.html.browserRecommendations');
-				}
-
-				$template->compose('root.html');
-
-			// JS
-
-				// Avoid for crawlers
-				if (!XXX_HTTP_Browser::$crawler && XXX_Type::isEmpty($browserRecommendation))
-				{
-					// External javaScript files
-
-						foreach ($this->externalJSFiles as $externalJSFile)
+					// Index (Search Engines)
+						$result .= '<meta name="revisit-after" content="7 days">';
+						$revisionDate = XXX_I18n_Formatter::formatRFC2965(XXX_TimestampHelpers::getCurrentTimestamp());
+	
+						$result .= '<meta name="date" content="' . $revisionDate . '">';
+						$result .= '<meta name="revised" content="' . $revisionDate . '">';
+						
+						if ($this->indexable)
 						{
-								$template->setVariable('PATH', $externalJSFile['publicWebURI']);
-								$template->setVariable('PREFIX', $externalJSFile['prefix']);
-								$template->setVariable('SUFFIX', $externalJSFile['suffix']);
-							$template->compose('root.js.externalJSFile');
+							$result .= '<meta name="distribution" content="global">';
+							$result .= '<meta name="robots" content="all,index,follow">';
+							$result .= '<meta name="googlebot" content="index,follow">';
 						}
-
-					// Internal javaScript
-
-						$internalJS = $this->internalJS;
-
-						// Library
-
-							$library = XXX_String::$lineSeparator;
-
-								$library .= 'XXX_Server.server_ID = \'' . XXX_Server::$server_ID . '\';' . XXX_String::$lineSeparator;
-								
-								$library .= 'XXX_Configuration_Server.isDevelopmentServer = ' . (XXX_Server::isDevelopmentServer() ? 'true' : 'false') . ';' . XXX_String::$lineSeparator;
-								
-								$library .= 'XXX_Domain.setParsedDomain(' . XXX_String_JSON::encode(XXX_Domain::getDomain()) . ');' . XXX_String::$lineSeparator;
-
-								$library .= 'XXX_HTTPServer_Client.ip = ' . XXX_String_JSON::encode(XXX_HTTPServer_Client::$ip) . ';' . XXX_String::$lineSeparator;
-								$library .= 'XXX_HTTPServer_Client.encryptedConnection = ' . XXX_String_JSON::encode(XXX_HTTPServer_Client::$encryptedConnection) . ';' . XXX_String::$lineSeparator;
-								
-								foreach (XXX_HTTPServer_Client_Input::$profiles as $key => $value)
-								{
-									$library .= 'XXX_HTTPServer_Client_Input.addProfile(' . XXX_String_JSON::encode($key) . ', ' . XXX_String_JSON::encode($value) . ');' . XXX_String::$lineSeparator;
-								}
-								
-								//TODO doesn't belong here, both...
-								$library .= 'XXX_Account_ClientInput.user_ID = ' . XXX_String_JSON::encode(XXX_Account_ClientInput::$user_ID) . ';' . XXX_String::$lineSeparator;
-								$library .= 'XXX_Account_ClientInput.setSpace(' . XXX_String_JSON::encode(XXX_Account_ClientInput::$space) . ');' . XXX_String::$lineSeparator;
-
-								$library .= 'XXX_Paths.addGroup(\'PublicWeb\', \'/\', false);' .  XXX_String::$lineSeparator;
-								
-								foreach (XXX_Paths::$pathGroups['PublicWeb']['paths'] as $key => $value)
-								{
-									$library .= 'XXX_Paths.pathGroups.PublicWeb.paths.' . $key . ' = \'' . $value . '\';' . XXX_String::$lineSeparator;
-								}
-							
-							$tempTimestamp = new XXX_Timestamp();
-							$parts = $tempTimestamp->parse();
-							$date = $parts['year'] . '_' . $parts['month'] . '_' . $parts['date'];
-							
-							$library .= 'XXX_I18n_Currencies.date = \'' . $date . '\';' . XXX_String::$lineSeparator;
-							$library .= 'XXX_I18n_Currencies.exchangeRates = ' . XXX_String_JSON::encode(XXX_I18n_Currency::$exchangeRates) . ';' . XXX_String::$lineSeparator;
-							
-						$internalJS = $library . XXX_String::$lineSeparator . $internalJS;
-						
-						if (XXX_HTTP_Cookie_Session::hasApplicationFeedbackMessages())
-						{						
-							$internalJS .= XXX_String::$lineSeparator . XXX_HTTP_Cookie_Session::composeApplicationFeedbackMessagesJS();
+						else
+						{
+							$result .= '<meta name="distribution" content="iu">';
+							$result .= '<meta name="robots" content="noarchive,nosnippet,noindex,follow">';
+							$result .= '<meta name="googlebot" content="noarchive,nosnippet,noindex">';
 						}
 						
-						if ($this->compressInternalJS && !XXX_Debug::$debug)
-						{						
-							$internalJS = XXX_JS_Compressor::compressString($internalJS);
-						}	
+					// Custom meta tags
 						
-						$template->setVariable('INTERNAL_JS', $internalJS);
-
-					$template->compose('root.js');
-				}
-
-			$template->compose('root');
-		}
+						foreach ($this->customMetaTags as $customMetaTag)
+						{
+							$result .= $customMetaTag['prefix'] . '<meta ' . $customMetaTag['type'] . '="' . $customMetaTag['key'] . '" content="' . $customMetaTag['value'] . '">' . $customMetaTag['suffix'];
+						}
+					
+					// Custom meta
+						
+						$result .= $this->customMeta;
+					
+				// Presentation
+					// Unobtrusive (external) and progressively enhanced when supported or possible
+					
+						/*
+						Mobile devices standardization:
+						iPhone/iPod - http://developer.apple.com/safari/library/documentation/AppleApplications/Reference/SafariHTMLRef/Articles/MetaTags.html
+						Windows Mobile - http://msdn.microsoft.com/en-us/library/ms890014.aspx
+						*/
+						
+						$result .= '<meta name="viewport" content="initial-scale=1.0, user-scalable=yes">';
+						$result .= '<meta name="mobileOptimized" content="960">';
+						$result .= '<meta name="handheldFriendly" content="true">';
+						
+						// Disable inline toolbars etc. that interfere with drag&drop behavior
+							
+							$result .= '<meta http-equiv="imagetoolbar" content="false">';
+							$result .= '<meta name="MSSmartTagsPreventParsing" content="true">';
+							$result .= '<meta name="MSThemeCompatible" content="no">';
+						
+						//  Icon - http://www.favicon.cc TODO transparant/animated 
+						if ($this->favicon)
+						{
+							$result .= '<link rel="icon" href="' . $this->favicon . '" type="image/x-icon">';
+							$result .= '<link rel="shortcut icon" href="' . $this->favicon . '" type="image/x-icon">';
+						}
+						
+						// External CSS files
+						foreach ($this->externalCSSFiles as $externalCSSFile)
+						{
+							$result .= $externalCSSFile['prefix'] . '<link rel="stylesheet" type="text/css" media="all" charset="utf-8" href="' . $externalCSSFile['uri'] . '">' . $externalCSSFile['suffix'];
+						}
+						
+						// Internal CSS
+						if ($this->internalCSS)
+						{
+							$result .= '<style type="text/css" media="all" charset="utf-8">';
+							$result .= '@charset "utf-8";';
+							$result .= $this->internalCSS;
+							$result .= '</style>';
+						}
+						
+			$result .= '</head>';
+			$result .= '<body>';
+						
+				// Body
+					
+					/*
+					
+					1. Support
+					2. Content
+					3. Navigation
+							
+					id = js
+					classes = css
+					
+					*/
+					
+					$result .= $this->customHTML;
+				
+				// JavaScript
+					
+					// Unobtrusive (external and not prototyping existing elements) and progressively enhanced when supported or possible
+					
+					// External js files
+					foreach ($this->externalJSFiles as $externalJSFile)
+					{
+						$result .= $externalJSFile['prefix'] . '<script type="text/javascript" language="javascript" charset="utf-8" src="' . $externalJSFile['uri'] . '"></script>' . $externalJSFile['suffix'];
+					}
+					
+					// Internal js
+					/*
+					$result .= '<script type="text/javascript" language="javascript" charset="utf-8">';
+						$result .= 'var XXX_frameSupport = true;';
+					$result .= '</script>';
+					$result .= '<noframes>';
+						$result .= '<script type="text/javascript" language="javascript" charset="utf-8">';
+							$result .= 'XXX_frameSupport = false;';
+						$result .= '</script>';
+					$result .= '</noframes>'; 
+					*/
+					
+					if ($this->internalJS)
+					{
+						$result .= '<script type="text/javascript" language="javascript" charset="utf-8">';
+						$result .= '<!--//--><![CDATA[//><!--';
+							$result .= $this->internalJS;
+						$result .= '//--><!]]>';
+						$result .= '</script>';
+					}
+			
+			$result .= '</body>';
 		
-		// Should be after session application feedback has been called... otherwise it doesn't invalidate
-		XXX_HTTP_Cookie_Session::save();
-		
-		$content = $template->getContent('root');
+		$result .= '</html>';
 		
 		/*
 		TODO properly
@@ -546,8 +396,7 @@ class XXX_HTML_Page_Composer
 		}
 		*/
 		
-		
-		return $content;
+		return $result;
 	}
 }
 

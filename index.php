@@ -1,6 +1,6 @@
 <?php
 
-require_once 'XXX_Manager_State.php';
+/*require_once 'XXX_Manager_State.php';
 require_once 'XXX_Component_Input.php';
 require_once 'XXX_Component_CharacterInput.php';
 require_once 'XXX_Component_VisualCharacterInput.php';
@@ -25,8 +25,8 @@ require_once 'XXX_Component_Grid.php';
 require_once 'XXX_Component_HiddenVariableInput.php';
 require_once 'XXX_Component_Link.php';
 require_once 'XXX_HTML.php';
-require_once 'XXX_HTML_Composer.php';
+require_once 'XXX_HTML_Composer.php';*/
 require_once 'XXX_HTML_Page_Composer.php';
-require_once 'XXX_JS_Composer.php';
+//require_once 'XXX_JS_Composer.php';
 
 ?>
