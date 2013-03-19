@@ -178,13 +178,39 @@ class XXX_HTML_Page_Composer
 			$this->internalJS = $internalJS;
 		}
 
-		public function appendInternalJS ($internalJS = '')
+		public function appendInternalJS ($internalJS = '', $domReady = false)
 		{
+			if ($domReady)
+			{
+				$temp = '';
+				$temp .= XXX_String::$lineSeparator;
+				$temp .= 'XXX_DOM_Ready.addEventListener(function ()' . XXX_String::$lineSeparator;
+				$temp .= '{' . XXX_String::$lineSeparator;
+				$temp .= $internalJS . XXX_String::$lineSeparator;
+				$temp .= '});' . XXX_String::$lineSeparator;
+				$temp .= XXX_String::$lineSeparator;
+				
+				$internalJS = $temp;
+			}
+			
 			$this->internalJS .= XXX_String::$lineSeparator . $internalJS;
 		}
 
-		public function prependInternalJS ($internalJS = '')
+		public function prependInternalJS ($internalJS = '', $domReady = false)
 		{
+			if ($domReady)
+			{
+				$temp = '';
+				$temp .= XXX_String::$lineSeparator;
+				$temp .= 'XXX_DOM_Ready.addEventListener(function ()' . XXX_String::$lineSeparator;
+				$temp .= '{' . XXX_String::$lineSeparator;
+				$temp .= $internalJS . XXX_String::$lineSeparator;
+				$temp .= '});' . XXX_String::$lineSeparator;
+				$temp .= XXX_String::$lineSeparator;
+				
+				$internalJS = $temp;
+			}
+			
 			$this->internalJS = $internalJS . XXX_String::$lineSeparator . $this->internalJS;
 		}
 	
@@ -374,8 +400,8 @@ class XXX_HTML_Page_Composer
 					if ($this->internalJS)
 					{
 						$result .= '<script type="text/javascript" language="javascript" charset="utf-8">';
-						$result .= '<!--//--><![CDATA[//><!--';
-							$result .= $this->internalJS;
+						$result .= '<!--//--><![CDATA[//><!--' . XXX_OperatingSystem::$lineSeparator;
+							$result .= $this->internalJS . XXX_OperatingSystem::$lineSeparator;
 						$result .= '//--><!]]>';
 						$result .= '</script>';
 					}

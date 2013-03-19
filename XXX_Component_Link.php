@@ -93,7 +93,7 @@ class XXX_Component_Link extends XXX_Component_Input
 		
 		$js .= parent::composeInitializationJS();
 																	
-		$js .= $jsInstanceVariable . '.setURI(' . XXX_JS_Composer::composeString($this->uri) . ');' . XXX_String::$lineSeparator;
+		$js .= $jsInstanceVariable . '.goToURI(' . XXX_JS_Composer::composeString($this->uri) . ');' . XXX_String::$lineSeparator;
 		$js .= $jsInstanceVariable . '.setLabel(' . XXX_JS_Composer::composeString($this->label) . ');' . XXX_String::$lineSeparator;
 		
 		if ($this->preventDefaultAction)
