@@ -374,6 +374,26 @@ class XXX_HTML_Page_Composer
 					*/
 					
 					$result .= $this->customHTML;
+					
+					if (XXX_PHP::$debug)
+					{
+						$result .= '<div class="liveDebugOutputExpanded" id="XXX_liveDebugOutput">
+							<pre id="liveDebugOutput">
+							</pre>
+						</div>
+						<div class="debugOutputExpanded" id="XXX_debugOutput">
+							<pre id="debugOutput">
+								' . XXX_PHP::composeErrorOutput() . '
+							</pre>
+						</div>';
+					}
+					
+					if (XXX::$deploymentInformation['deployEnvironment'] != 'production')
+					{
+						$result .= '<div class="deployEnvironmentFlap">
+							' . XXX::$deploymentInformation['deployEnvironment'] . '
+						</div>';
+					}
 				
 				// JavaScript
 					
@@ -396,6 +416,58 @@ class XXX_HTML_Page_Composer
 						$result .= '</script>';
 					$result .= '</noframes>'; 
 					*/
+					
+					if (XXX_PHP::$debug)
+					{
+						$this->internalJS .= "\r\n" . 'XXX_DOM_Ready.addEventListener(function ()
+						{
+							var XXX_liveDebugOutput = XXX_DOM.get(\'XXX_liveDebugOutput\');
+							var XXX_debugOutput = XXX_DOM.get(\'XXX_debugOutput\');
+							
+							XXX_liveDebugOutput.XXX_isVisible = true;
+							XXX_debugOutput.XXX_isVisible = true;
+							
+							XXX_DOM_NativeEventDispatcher.addEventListener(XXX_liveDebugOutput, \'click\', function (nativeEvent)
+							{
+								nativeEvent.preventDefault();
+								nativeEvent.stopPropagation();
+								
+								if (XXX_liveDebugOutput.XXX_isVisible)
+								{
+									XXX_liveDebugOutput.XXX_isVisible = false;
+									
+									XXX_CSS.setClass(XXX_liveDebugOutput, \'liveDebugOutputCollapsed\');
+								}
+								else
+								{
+									
+									XXX_liveDebugOutput.XXX_isVisible = true;
+									
+									XXX_CSS.setClass(XXX_liveDebugOutput, \'liveDebugOutputExpanded\');
+								}
+							});
+							
+							XXX_DOM_NativeEventDispatcher.addEventListener(XXX_debugOutput, \'click\', function (nativeEvent)
+							{
+								nativeEvent.preventDefault();
+								nativeEvent.stopPropagation();
+								
+								if (XXX_debugOutput.XXX_isVisible)
+								{
+									XXX_debugOutput.XXX_isVisible = false;
+									
+									XXX_CSS.setClass(XXX_debugOutput, \'debugOutputCollapsed\');
+								}
+								else
+								{
+									
+									XXX_debugOutput.XXX_isVisible = true;
+									
+									XXX_CSS.setClass(XXX_debugOutput, \'debugOutputExpanded\');
+								}
+							});
+						});' . "\r\n";
+					}
 					
 					if ($this->internalJS)
 					{
