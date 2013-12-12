@@ -377,11 +377,11 @@ class XXX_HTML_Page_Composer
 					
 					if (XXX_PHP::$debug)
 					{
-						$result .= '<div class="liveDebugOutputExpanded" id="XXX_liveDebugOutput">
+						$result .= '<div class="XXX_liveDebugOutputExpanded" id="XXX_liveDebugOutput">
 							<pre id="liveDebugOutput">
 							</pre>
 						</div>
-						<div class="debugOutputExpanded" id="XXX_debugOutput">
+						<div class="XXX_debugOutputExpanded" id="XXX_debugOutput">
 							<pre id="debugOutput">
 								' . XXX_PHP::composeErrorOutput() . '
 							</pre>
@@ -390,7 +390,7 @@ class XXX_HTML_Page_Composer
 					
 					if (XXX::$deploymentInformation['deployEnvironment'] != 'production')
 					{
-						$result .= '<div class="deployEnvironmentFlap">
+						$result .= '<div class="XXX_deployEnvironmentFlap">
 							' . XXX::$deploymentInformation['deployEnvironment'] . '
 						</div>';
 					}
@@ -436,14 +436,14 @@ class XXX_HTML_Page_Composer
 								{
 									XXX_liveDebugOutput.XXX_isVisible = false;
 									
-									XXX_CSS.setClass(XXX_liveDebugOutput, \'liveDebugOutputCollapsed\');
+									XXX_CSS.setClass(XXX_liveDebugOutput, \'XXX_liveDebugOutputCollapsed\');
 								}
 								else
 								{
 									
 									XXX_liveDebugOutput.XXX_isVisible = true;
 									
-									XXX_CSS.setClass(XXX_liveDebugOutput, \'liveDebugOutputExpanded\');
+									XXX_CSS.setClass(XXX_liveDebugOutput, \'XXX_liveDebugOutputExpanded\');
 								}
 							});
 							
@@ -456,14 +456,14 @@ class XXX_HTML_Page_Composer
 								{
 									XXX_debugOutput.XXX_isVisible = false;
 									
-									XXX_CSS.setClass(XXX_debugOutput, \'debugOutputCollapsed\');
+									XXX_CSS.setClass(XXX_debugOutput, \'XXX_debugOutputCollapsed\');
 								}
 								else
 								{
 									
 									XXX_debugOutput.XXX_isVisible = true;
 									
-									XXX_CSS.setClass(XXX_debugOutput, \'debugOutputExpanded\');
+									XXX_CSS.setClass(XXX_debugOutput, \'XXX_debugOutputExpanded\');
 								}
 							});
 						});' . "\r\n";
