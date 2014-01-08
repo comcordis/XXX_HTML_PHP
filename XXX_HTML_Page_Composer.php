@@ -295,14 +295,14 @@ class XXX_HTML_Page_Composer
 						if ($this->indexable)
 						{
 							$result .= '<meta name="distribution" content="global">';
-							$result .= '<meta name="robots" content="all,index,follow">';
-							$result .= '<meta name="googlebot" content="index,follow">';
+							$result .= '<meta name="robots" content="index, follow">';
+							$result .= '<meta name="googlebot" content="index, follow">';
 						}
 						else
 						{
 							$result .= '<meta name="distribution" content="iu">';
-							$result .= '<meta name="robots" content="noarchive,nosnippet,noindex,follow">';
-							$result .= '<meta name="googlebot" content="noarchive,nosnippet,noindex">';
+							$result .= '<meta name="robots" content="noindex, nofollow">';
+							$result .= '<meta name="googlebot" content="noindex, nofollow">';
 						}
 						
 					// Custom meta tags
