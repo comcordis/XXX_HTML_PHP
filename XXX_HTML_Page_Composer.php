@@ -251,9 +251,9 @@ class XXX_HTML_Page_Composer
 					{
 						$result .= '<title>' . $this->title . '</title>';
 					}
-					if ($this->keywords != '')
+					if ($this->tags != '')
 					{
-						$result .= '<meta name="keywords" content="' . $this->keywords . '">';
+						$result .= '<meta name="tags" content="' . $this->tags . '">';
 					}
 					if ($this->description != '')
 					{
