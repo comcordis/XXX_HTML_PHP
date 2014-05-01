@@ -477,8 +477,8 @@ class XXX_Component_Form
 					$submittedToken = $this->getClientInputVariable($this->name . '_token', 'string');
 					$submittedTokenTimestamp = $this->getClientInputVariable($this->name . '_tokenTimestamp', 'integer');
 					
-					$sessionToken = XXX_HTTP_Cookie_Session::getVariable($this->name . '_token');
-					$sessionTokenTimestamp = XXX_HTTP_Cookie_Session::getVariable($this->name . '_tokenTimestamp');
+					$sessionToken = XXX_Session::getVariable($this->name . '_token');
+					$sessionTokenTimestamp = XXX_Session::getVariable($this->name . '_tokenTimestamp');
 					
 					$tokenTimestampInterval = XXX_TimestampHelpers::getCurrentTimestamp() - $sessionTokenTimestamp;
 					
@@ -537,8 +537,8 @@ class XXX_Component_Form
 				// TODO make tokens in the dataBase with userAgent IP etc. timestamp, and form ID/name, invalidate previous one if new one is requested based on form ID/name etc.
 				if ($this->getProcessingState() == 'submitted' && $this->valid)
 				{
-					XXX_HTTP_Cookie_Session::deleteVariable($this->name . '_token');
-					XXX_HTTP_Cookie_Session::deleteVariable($this->name . '_tokenTimestamp');
+					XXX_Session::deleteVariable($this->name . '_token');
+					XXX_Session::deleteVariable($this->name . '_tokenTimestamp');
 										
 					$this->token = '';
 					$this->tokenTimestamp = 0;
@@ -548,8 +548,8 @@ class XXX_Component_Form
 					$token = XXX_String::getRandomHash();
 					$tokenTimestamp = XXX_TimestampHelpers::getCurrentTimestamp();
 					
-					XXX_HTTP_Cookie_Session::setVariable($this->name . '_token', $token);
-					XXX_HTTP_Cookie_Session::setVariable($this->name . '_tokenTimestamp', $tokenTimestamp);
+					XXX_Session::setVariable($this->name . '_token', $token);
+					XXX_Session::setVariable($this->name . '_tokenTimestamp', $tokenTimestamp);
 					
 					$this->token = $token;
 					$this->tokenTimestamp = $tokenTimestamp;
