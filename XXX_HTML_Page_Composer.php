@@ -468,36 +468,36 @@ class XXX_HTML_Page_Composer
 						$result .= '</script>';
 					$result .= '</noframes>'; 
 					
-					
-					$this->internalJS .= "\r\n" . 'XXX_DOM_Ready.addEventListener(function ()
+					$tempJS = '';
+					$tempJS .= "\r\n" . 'XXX_DOM_Ready.addEventListener(function ()
 					{';
-						$this->internalJS .= "\r\n";
-						$this->internalJS .= XXX_PHP::composeJS();
-						$this->internalJS .= "\r\n";
+						$tempJS .= "\r\n";
+						$tempJS .= XXX_PHP::composeJS();
+						$tempJS .= "\r\n";
 						
-						$this->internalJS .= "\r\n";
-						$this->internalJS .= XXX_URI::composeJS();
-						$this->internalJS .= "\r\n";
+						$tempJS .= "\r\n";
+						$tempJS .= XXX_URI::composeJS();
+						$tempJS .= "\r\n";
 						
-						$this->internalJS .= "\r\n";
-						$this->internalJS .= XXX_I18n_Currency::composeExchangeRatesJS();
-						$this->internalJS .= "\r\n";
+						$tempJS .= "\r\n";
+						$tempJS .= XXX_I18n_Currency::composeExchangeRatesJS();
+						$tempJS .= "\r\n";
 												
 						if ($this->jsCache != '')
 						{
-							$this->internalJS .= "\r\n";
+							$tempJS .= "\r\n";
 							
 							foreach ($this->jsCache as $key => $value)
 							{
-								$this->internalJS .= 'XXX.cache.' . $key . ' = ' . XXX_String_JSON::encode($value) . ';' . "\r\n";
+								$tempJS .= 'XXX.cache.' . $key . ' = ' . XXX_String_JSON::encode($value) . ';' . "\r\n";
 							}
 							
-							$this->internalJS .= "\r\n";
+							$tempJS .= "\r\n";
 						}
 						
 						if (XXX_PHP::$debug)
 						{
-							$this->internalJS .= "\r\n" . 'var XXX_liveDebugOutput = XXX_DOM.get(\'XXX_liveDebugOutput\');
+							$tempJS .= "\r\n" . 'var XXX_liveDebugOutput = XXX_DOM.get(\'XXX_liveDebugOutput\');
 								var XXX_debugOutput = XXX_DOM.get(\'XXX_debugOutput\');
 								
 								XXX_liveDebugOutput.XXX_isVisible = true;
@@ -544,7 +544,10 @@ class XXX_HTML_Page_Composer
 								});';
 						}
 					
-					$this->internalJS .= "\r\n" . '});' . "\r\n";
+					$tempJS .= "\r\n" . '});' . "\r\n";
+					
+					
+					$this->internalJS = $tempJS . $this->internalJS;
 				
 										
 					$this->internalJS .= "\r\n" . 'XXX_DOM_Ready.addEventListener(function ()
