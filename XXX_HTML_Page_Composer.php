@@ -198,7 +198,7 @@ class XXX_HTML_Page_Composer
 			{
 				$temp = '';
 				$temp .= XXX_String::$lineSeparator;
-				$temp .= 'XXX_DOM_Ready.addEventListener(function ()' . XXX_String::$lineSeparator;
+				$temp .= 'XXX.addEventListener(\'launch\', function ()' . XXX_String::$lineSeparator;
 				$temp .= '{' . XXX_String::$lineSeparator;
 				$temp .= $internalJS . XXX_String::$lineSeparator;
 				$temp .= '});' . XXX_String::$lineSeparator;
@@ -216,7 +216,7 @@ class XXX_HTML_Page_Composer
 			{
 				$temp = '';
 				$temp .= XXX_String::$lineSeparator;
-				$temp .= 'XXX_DOM_Ready.addEventListener(function ()' . XXX_String::$lineSeparator;
+				$temp .= 'XXX.addEventListener(\'launch\', function ()' . XXX_String::$lineSeparator;
 				$temp .= '{' . XXX_String::$lineSeparator;
 				$temp .= $internalJS . XXX_String::$lineSeparator;
 				$temp .= '});' . XXX_String::$lineSeparator;
