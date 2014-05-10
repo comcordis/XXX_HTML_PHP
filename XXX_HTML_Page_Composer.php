@@ -29,6 +29,8 @@ class XXX_HTML_Page_Composer
 		
 		public $standardizePresentation = true;
 		
+		public $bodyID = '';
+		
 		public $favicon = false;
 
 		public $externalCSSFiles = array
@@ -43,7 +45,9 @@ class XXX_HTML_Page_Composer
 		public $customHTML = '';
 
 	// JS
-
+		
+		public $jsCache = array();
+		
 		public $externalJSFiles = array
 		(
 			//array('publicWebURI' => '', 'prefix' => '', 'suffix' => '')
@@ -148,6 +152,11 @@ class XXX_HTML_Page_Composer
 		{
 			$this->internalCSS = $internalCSS . XXX_String::$lineSeparator . $this->internalCSS;
 		}
+		
+		public function setBodyID ($bodyID = '')
+		{
+			$this->bodyID = '';
+		}
 
 	// HTML
 
@@ -167,10 +176,15 @@ class XXX_HTML_Page_Composer
 		}
 
 	// JS
-
-		public function addExternalJSFile ($uri = '', $prefix = '', $suffix = '')
+		
+		public function addToJSCache ($key = '', $value = '')
 		{
-			$this->externalJSFiles[] = array('uri' => $uri, 'prefix' => $prefix, 'suffix' => $suffix);
+			$this->jsCache[$key] = $value;
+		}
+		
+		public function addExternalJSFile ($uri = '', $prefix = '', $suffix = '', $head = false)
+		{
+			$this->externalJSFiles[] = array('uri' => $uri, 'prefix' => $prefix, 'suffix' => $suffix, 'head' => $head);
 		}
 
 		public function setInternalJS ($internalJS = '')
@@ -223,7 +237,12 @@ class XXX_HTML_Page_Composer
 		// doctype: html5
 		$result .= '<!DOCTYPE html>';
 		
-		$result .= '<html>';
+		$result .= '<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->';
+		$result .= '<!--[if IE 7]><html class="no-js lt-ie9 lt-ie8"> <![endif]-->';
+		$result .= '<!--[if IE 8]><html class="no-js lt-ie9"> <![endif]-->';
+		$result .= '<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->';
+		
+		//$result .= '<html>';
 			$result .= '<head>';
 				
 				// Meta 
@@ -316,9 +335,20 @@ class XXX_HTML_Page_Composer
 						
 						$result .= $this->customMeta;
 					
+					// Deployment information
+					
+						if (XXX_PHP::$debug)
+						{
+							$deploymentInformation = '<!-- On ' . XXX::$deploymentInformation['timestamp'] . ' [' . XXX::$deploymentInformation['checkout'] . ' (' . XXX::$deploymentInformation['commitHash'] . ')] ' . XXX::$deploymentInformation['deployEnvironment'] . ' (' . XXX::$deploymentInformation['deployIteration'] . ') was deployed by ' . XXX::$deploymentInformation['deployer'] . ' on ' . XXX_OperatingSystem::$hostname . ' (' . XXX_HTTPServer::$ipAddress . ') -->';
+							
+							$result .= $deploymentInformation;
+						}
+					
 				// Presentation
 					// Unobtrusive (external) and progressively enhanced when supported or possible
 					
+						$result .= '<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">';
+						
 						/*
 						Mobile devices standardization:
 						iPhone/iPod - http://developer.apple.com/safari/library/documentation/AppleApplications/Reference/SafariHTMLRef/Articles/MetaTags.html
@@ -357,8 +387,23 @@ class XXX_HTML_Page_Composer
 							$result .= '</style>';
 						}
 						
+				// JavaScript
+					
+					foreach ($this->externalJSFiles as $externalJSFile)
+					{
+						if ($externalJSFile['head'])
+						{
+							$result .= $externalJSFile['prefix'] . '<script type="text/javascript" language="javascript" charset="utf-8" src="' . $externalJSFile['uri'] . '"></script>' . $externalJSFile['suffix'];
+						}
+					}
+						
 			$result .= '</head>';
-			$result .= '<body>';
+			$result .= '<body';
+			if ($this->bodyID != '')
+			{
+				$result .= ' id="' . $this->bodyID . '"';
+			}
+			$result .= '>';
 						
 				// Body
 					
@@ -374,6 +419,10 @@ class XXX_HTML_Page_Composer
 					*/
 					
 					$result .= $this->customHTML;
+					
+					
+					
+					$result .= '<div id="XXX_GoogleMapsAPI_attribution"></div>';
 					
 					if (XXX_PHP::$debug)
 					{
@@ -402,11 +451,14 @@ class XXX_HTML_Page_Composer
 					// External js files
 					foreach ($this->externalJSFiles as $externalJSFile)
 					{
-						$result .= $externalJSFile['prefix'] . '<script type="text/javascript" language="javascript" charset="utf-8" src="' . $externalJSFile['uri'] . '"></script>' . $externalJSFile['suffix'];
+						if (!$externalJSFile['head'])
+						{
+							$result .= $externalJSFile['prefix'] . '<script type="text/javascript" language="javascript" charset="utf-8" src="' . $externalJSFile['uri'] . '"></script>' . $externalJSFile['suffix'];
+						}
 					}
 					
 					// Internal js
-					/*
+					
 					$result .= '<script type="text/javascript" language="javascript" charset="utf-8">';
 						$result .= 'var XXX_frameSupport = true;';
 					$result .= '</script>';
@@ -415,59 +467,90 @@ class XXX_HTML_Page_Composer
 							$result .= 'XXX_frameSupport = false;';
 						$result .= '</script>';
 					$result .= '</noframes>'; 
-					*/
 					
-					if (XXX_PHP::$debug)
-					{
-						$this->internalJS .= "\r\n" . 'XXX_DOM_Ready.addEventListener(function ()
+					
+					$this->internalJS .= "\r\n" . 'XXX_DOM_Ready.addEventListener(function ()
+					{';
+						$this->internalJS .= "\r\n";
+						$this->internalJS .= XXX_PHP::composeJS();
+						$this->internalJS .= "\r\n";
+						
+						$this->internalJS .= "\r\n";
+						$this->internalJS .= XXX_URI::composeJS();
+						$this->internalJS .= "\r\n";
+						
+						$this->internalJS .= "\r\n";
+						$this->internalJS .= XXX_I18n_Currency::composeExchangeRatesJS();
+						$this->internalJS .= "\r\n";
+												
+						if ($this->jsCache != '')
 						{
-							var XXX_liveDebugOutput = XXX_DOM.get(\'XXX_liveDebugOutput\');
-							var XXX_debugOutput = XXX_DOM.get(\'XXX_debugOutput\');
+							$this->internalJS .= "\r\n";
 							
-							XXX_liveDebugOutput.XXX_isVisible = true;
-							XXX_debugOutput.XXX_isVisible = true;
-							
-							XXX_DOM_NativeEventDispatcher.addEventListener(XXX_liveDebugOutput, \'click\', function (nativeEvent)
+							foreach ($this->jsCache as $key => $value)
 							{
-								nativeEvent.preventDefault();
-								nativeEvent.stopPropagation();
-								
-								if (XXX_liveDebugOutput.XXX_isVisible)
-								{
-									XXX_liveDebugOutput.XXX_isVisible = false;
-									
-									XXX_CSS.setClass(XXX_liveDebugOutput, \'XXX_liveDebugOutputCollapsed\');
-								}
-								else
-								{
-									
-									XXX_liveDebugOutput.XXX_isVisible = true;
-									
-									XXX_CSS.setClass(XXX_liveDebugOutput, \'XXX_liveDebugOutputExpanded\');
-								}
-							});
+								$this->internalJS .= 'XXX.cache.' . $key . ' = ' . XXX_String_JSON::encode($value) . ';' . "\r\n";
+							}
 							
-							XXX_DOM_NativeEventDispatcher.addEventListener(XXX_debugOutput, \'click\', function (nativeEvent)
-							{
-								nativeEvent.preventDefault();
-								nativeEvent.stopPropagation();
+							$this->internalJS .= "\r\n";
+						}
+						
+						if (XXX_PHP::$debug)
+						{
+							$this->internalJS .= "\r\n" . 'var XXX_liveDebugOutput = XXX_DOM.get(\'XXX_liveDebugOutput\');
+								var XXX_debugOutput = XXX_DOM.get(\'XXX_debugOutput\');
 								
-								if (XXX_debugOutput.XXX_isVisible)
+								XXX_liveDebugOutput.XXX_isVisible = true;
+								XXX_debugOutput.XXX_isVisible = true;
+								
+								XXX_DOM_NativeEventDispatcher.addEventListener(XXX_liveDebugOutput, \'click\', function (nativeEvent)
 								{
-									XXX_debugOutput.XXX_isVisible = false;
+									nativeEvent.preventDefault();
+									nativeEvent.stopPropagation();
 									
-									XXX_CSS.setClass(XXX_debugOutput, \'XXX_debugOutputCollapsed\');
-								}
-								else
+									if (XXX_liveDebugOutput.XXX_isVisible)
+									{
+										XXX_liveDebugOutput.XXX_isVisible = false;
+										
+										XXX_CSS.setClass(XXX_liveDebugOutput, \'XXX_liveDebugOutputCollapsed\');
+									}
+									else
+									{
+										
+										XXX_liveDebugOutput.XXX_isVisible = true;
+										
+										XXX_CSS.setClass(XXX_liveDebugOutput, \'XXX_liveDebugOutputExpanded\');
+									}
+								});
+								
+								XXX_DOM_NativeEventDispatcher.addEventListener(XXX_debugOutput, \'click\', function (nativeEvent)
 								{
+									nativeEvent.preventDefault();
+									nativeEvent.stopPropagation();
 									
-									XXX_debugOutput.XXX_isVisible = true;
-									
-									XXX_CSS.setClass(XXX_debugOutput, \'XXX_debugOutputExpanded\');
-								}
-							});
+									if (XXX_debugOutput.XXX_isVisible)
+									{
+										XXX_debugOutput.XXX_isVisible = false;
+										
+										XXX_CSS.setClass(XXX_debugOutput, \'XXX_debugOutputCollapsed\');
+									}
+									else
+									{
+										
+										XXX_debugOutput.XXX_isVisible = true;
+										
+										XXX_CSS.setClass(XXX_debugOutput, \'XXX_debugOutputExpanded\');
+									}
+								});';
+						}
+					
+					$this->internalJS .= "\r\n" . '});' . "\r\n";
+				
+										
+					$this->internalJS .= "\r\n" . 'XXX_DOM_Ready.addEventListener(function ()
+						{
+							XXX.canLaunch();
 						});' . "\r\n";
-					}
 					
 					if ($this->internalJS)
 					{
