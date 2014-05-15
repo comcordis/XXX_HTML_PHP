@@ -192,13 +192,18 @@ class XXX_HTML_Page_Composer
 			$this->internalJS = $internalJS;
 		}
 
-		public function appendInternalJS ($internalJS = '', $domReady = false)
+		public function appendInternalJS ($internalJS = '', $when = false)
 		{
-			if ($domReady)
+			if ($when === true)
+			{
+				$when = 'launch';
+			}
+			
+			if ($when)
 			{
 				$temp = '';
 				$temp .= XXX_String::$lineSeparator;
-				$temp .= 'XXX.addEventListener(\'launch\', function ()' . XXX_String::$lineSeparator;
+				$temp .= 'XXX.addEventListener(\'' . $when . '\', function ()' . XXX_String::$lineSeparator;
 				$temp .= '{' . XXX_String::$lineSeparator;
 				$temp .= $internalJS . XXX_String::$lineSeparator;
 				$temp .= '});' . XXX_String::$lineSeparator;
@@ -210,13 +215,18 @@ class XXX_HTML_Page_Composer
 			$this->internalJS .= XXX_String::$lineSeparator . $internalJS;
 		}
 
-		public function prependInternalJS ($internalJS = '', $domReady = false)
+		public function prependInternalJS ($internalJS = '', $when = false)
 		{
-			if ($domReady)
+			if ($when === true)
+			{
+				$when = 'launch';
+			}
+			
+			if ($when)
 			{
 				$temp = '';
 				$temp .= XXX_String::$lineSeparator;
-				$temp .= 'XXX.addEventListener(\'launch\', function ()' . XXX_String::$lineSeparator;
+				$temp .= 'XXX.addEventListener(\'' . $when . '\', function ()' . XXX_String::$lineSeparator;
 				$temp .= '{' . XXX_String::$lineSeparator;
 				$temp .= $internalJS . XXX_String::$lineSeparator;
 				$temp .= '});' . XXX_String::$lineSeparator;
@@ -469,8 +479,8 @@ class XXX_HTML_Page_Composer
 					$result .= '</noframes>'; 
 					
 					$tempJS = '';
-					$tempJS .= "\r\n" . 'XXX_DOM_Ready.addEventListener(function ()
-					{';
+					$tempJS .= "\r\n" . 'XXX.addEventListener(\'beforeLaunch\', function ()
+{';
 						$tempJS .= "\r\n";
 						$tempJS .= XXX_PHP::composeJS();
 						$tempJS .= "\r\n";
