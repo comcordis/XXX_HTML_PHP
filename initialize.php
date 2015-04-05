@@ -27,6 +27,6 @@ require_once 'XXX_Component_Link.php';
 require_once 'XXX_HTML.php';
 require_once 'XXX_HTML_Composer.php';*/
 require_once 'XXX_HTML_Page_Composer.php';
-//require_once 'XXX_JS_Composer.php';
+//require_once 'XXX_Composer_JS.php';
 
 ?>

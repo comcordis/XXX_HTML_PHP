@@ -494,6 +494,8 @@ class XXX_Component_Form
 							
 							// TODO ip userAgentString (now implicitly via session)
 							XXX::dispatchEventToListeners('invalidFormToken', array('formName' => $this->name));
+							
+							XXX_Log::logLine('Invalid form token.', 'security');
 						}
 					}
 					else

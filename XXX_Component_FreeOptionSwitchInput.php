@@ -46,8 +46,8 @@ class XXX_Component_FreeOptionSwitchInput extends XXX_Component_OptionSwitchInpu
 		
 		$js .= parent::composeInitializationJS();
 		
-		$js .= $jsInstanceVariable . '.setValue(' . XXX_JS_Composer::composeString($this->getValue()) . ');' . XXX_String::$lineSeparator;
-		$js .= $jsInstanceVariable . '.setLabel(' . XXX_JS_Composer::composeString($this->textLabel) . ', ' . XXX_JS_Composer::composeString($this->htmlLabel) . ');' . XXX_String::$lineSeparator;
+		$js .= $jsInstanceVariable . '.setValue(' . XXX_Composer_JS::composeString($this->getValue()) . ');' . XXX_String::$lineSeparator;
+		$js .= $jsInstanceVariable . '.setLabel(' . XXX_Composer_JS::composeString($this->textLabel) . ', ' . XXX_Composer_JS::composeString($this->htmlLabel) . ');' . XXX_String::$lineSeparator;
 		
 		if ($this->isSelected())
 		{

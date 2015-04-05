@@ -100,14 +100,14 @@ class XXX_Component_Button extends XXX_Component_Input
 		
 		$js .= parent::composeInitializationJS();
 													
-		$js .= $jsInstanceVariable . '.setButtonAction(' . XXX_JS_Composer::composeString($this->buttonAction) . ');' . XXX_String::$lineSeparator;											
+		$js .= $jsInstanceVariable . '.setButtonAction(' . XXX_Composer_JS::composeString($this->buttonAction) . ');' . XXX_String::$lineSeparator;											
 		
 		if ($this->presentation['buttonEmotion'] != 'normal')
 		{
-			$js .= $jsInstanceVariable . '.setButtonEmotion(' . XXX_JS_Composer::composeString($this->presentation['buttonEmotion']) . ');' . XXX_String::$lineSeparator;
+			$js .= $jsInstanceVariable . '.setButtonEmotion(' . XXX_Composer_JS::composeString($this->presentation['buttonEmotion']) . ');' . XXX_String::$lineSeparator;
 		}
 		
-		$js .= $jsInstanceVariable . '.setLabel(' . XXX_JS_Composer::composeString($this->label) . ');' . XXX_String::$lineSeparator;
+		$js .= $jsInstanceVariable . '.setLabel(' . XXX_Composer_JS::composeString($this->label) . ');' . XXX_String::$lineSeparator;
 		
 		if ($this->preventDefaultAction)
 		{

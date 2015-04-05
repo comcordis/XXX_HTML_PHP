@@ -120,7 +120,7 @@ class XXX_Component_CharacterLineInput extends XXX_Component_VisualCharacterInpu
 		
 		$js .= parent::composeInitializationJS();
 				
-		$js .= $jsInstanceVariable . '.setValue(' . XXX_JS_Composer::composeString($this->getValue()) . ');' . XXX_String::$lineSeparator;
+		$js .= $jsInstanceVariable . '.setValue(' . XXX_Composer_JS::composeString($this->getValue()) . ');' . XXX_String::$lineSeparator;
 				
 		if (!$this->isEditable())
 		{

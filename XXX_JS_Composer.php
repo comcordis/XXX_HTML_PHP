@@ -1,6 +1,6 @@
 <?php
 
-abstract class XXX_JS_Composer
+abstract class XXX_Composer_JS
 {
 	public static function composeBoolean ($boolean)
 	{

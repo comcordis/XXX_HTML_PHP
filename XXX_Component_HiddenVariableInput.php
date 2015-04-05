@@ -50,7 +50,7 @@ class XXX_Component_HiddenVariableInput extends XXX_Component_CharacterInput
 		
 		$js .= parent::composeInitializationJS();
 		
-		$js .= $jsInstanceVariable . '.setValue(' . XXX_JS_Composer::composeString($this->getValue()) . ');' . XXX_String::$lineSeparator;
+		$js .= $jsInstanceVariable . '.setValue(' . XXX_Composer_JS::composeString($this->getValue()) . ');' . XXX_String::$lineSeparator;
 		
 		if (!$this->isEditable())
 		{
